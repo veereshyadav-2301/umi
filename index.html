@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Umesh!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #ffe1e1, #ffe4b3);
+      font-family: 'Open Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .celebrate-button {
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      background: #ff4081;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, background 0.3s;
+      transform-style: preserve-3d;
+    }
+
+    .celebrate-button:hover {
+      background: #e73370;
+      transform: scale(1.1) rotateX(10deg);
+    }
+
+    .card {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 1s ease;
+      text-align: center;
+      padding: 30px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      color: #ff4081;
+    }
+
+    .message {
+      font-size: 1.2rem;
+      margin-top: 15px;
+      color: #333;
+    }
+
+    .birthday-img {
+      width: 250px;
+      border-radius: 20px;
+      margin-top: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    canvas.confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #age-display {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas class="confetti" id="confetti-canvas"></canvas>
+
+  <button class="celebrate-button" onclick="startCelebration()">🎉 Celebrate Umesh's Birthday</button>
+
+  <div class="card" id="card">
+    <h1>🎂 Happy Birthday Umesh!</h1>
+    <p class="message">
+      Wishing you an amazing day full of happiness and joy! 🎈<br><br>
+      May all your dreams come true! 💫<br><br>
+      You're truly special. Enjoy every moment! 🥳
+    </p>
+    <img src="https://source.unsplash.com/400x300/?birthday,cake" class="birthday-img" alt="Birthday Cake">
+
+    <div id="age-display">
+      Calculating age...
+    </div>
+  </div>
+
+  <!-- Confetti Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <script>
+    function startCelebration() {
+      document.getElementById('card').classList.add('show');
+      document.querySelector('.celebrate-button').style.display = 'none';
+
+      // Confetti blast
+      const canvas = document.getElementById('confetti-canvas');
+      const myConfetti = window.confetti.create(canvas, { resize: true, useWorker: true });
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          myConfetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 }
+          });
+        }, i * 500);
+      }
+
+      startAgeTimer();
+    }
+
+    function startAgeTimer() {
+      const dob = new Date("2001-07-25T00:00:00");
+      const ageDisplay = document.getElementById("age-display");
+
+      function updateAge() {
+        const now = new Date();
+        let years = now.getFullYear() - dob.getFullYear();
+        let months = now.getMonth() - dob.getMonth();
+        let days = now.getDate() - dob.getDate();
+        let hours = now.getHours() - dob.getHours();
+        let minutes = now.getMinutes() - dob.getMinutes();
+        let seconds = now.getSeconds() - dob.getSeconds();
+
+        if (seconds < 0) {
+          seconds += 60;
+          minutes--;
+        }
+        if (minutes < 0) {
+          minutes += 60;
+          hours--;
+        }
+        if (hours < 0) {
+          hours += 24;
+          days--;
+        }
+        if (days < 0) {
+          months--;
+          const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+          days += prevMonth;
+        }
+        if (months < 0) {
+          months += 12;
+          years--;
+        }
+
+        ageDisplay.innerHTML = `🎉 Umesh is <b>${years}</b> years, <b>${months}</b> months, <b>${days}</b> days, <b>${hours}</b> hours, <b>${minutes}</b> minutes, <b>${seconds}</b> seconds old!`;
+      }
+
+      updateAge();
+      setInterval(updateAge, 1000);
+    }
+  </script>
+
+</body>
+</html>
